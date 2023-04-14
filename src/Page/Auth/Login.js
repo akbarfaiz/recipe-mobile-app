@@ -9,7 +9,10 @@ import {
   View,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator,
+  Modal,
+  ToastAndroid
 } from 'react-native';
 
 import { TextInput } from 'react-native-paper';
@@ -25,11 +28,17 @@ const LoginPage = ({navigation}) => {
   const [password, onChangePassword] = React.useState('');
 
   const LoginForm = () => {
-    data = {
+    let data = {
       email: email,
       password: password
     }
     dispatch(login(data))
+  }
+
+  if (auth.isError) {
+    ToastAndroid.show(`${auth.errorMessage.message}`, ToastAndroid.SHORT)
+    auth.isError = false
+    auth.errorMessage = null
   }
 
   return (
@@ -47,6 +56,7 @@ const LoginPage = ({navigation}) => {
         <Button onPress={LoginForm} color={'#EFC81A'} title='Login' />
       </SafeAreaView>
       <Text style={{marginTop: 20,textAlign: 'center', color: '#C4C4C4'}}>Don’t have an account? <TouchableOpacity onPress={() => navigation.push('Register')}><Text style={{color: '#EFC81A'}}>Sign Up</Text></TouchableOpacity></Text>
+      {auth.isLoading && <ActivityIndicator size="large" color="#EFC81A"/>}
     </View>
   )
 };

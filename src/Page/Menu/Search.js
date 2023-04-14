@@ -9,33 +9,36 @@ import {
   View,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 
 import axios from "axios"
 import {API_URL} from "@env"
 
+import {useSelector, useDispatch } from 'react-redux';
+import {getSearchRecipe} from "../../Storage/Action/menu"
+
 import { TextInput } from 'react-native-paper';
 import Icon  from 'react-native-vector-icons/Ionicons';
 
 const SearchPage = ({navigation}) => {
+    const dispatch = useDispatch()
+    const menu = useSelector((state)=>state.searchRecipe)
+
     const [search, onChangeSearch] = React.useState('');
     const [recipe, setRecipe] = useState();
 
     useEffect(() => {
-        const getData = async () => {
-          return await axios.get(API_URL+"/recipe").then(
-            res => {
-            console.log(res)
-            setRecipe(res.data.data)
-            }
-          ).catch(err => {
-            console.log(err)
-          })
-        }
-        getData()
-      },[])
+      dispatch(getSearchRecipe(search))
+    },[search])
   
+    useEffect(() => {
+      if (menu.data) {
+        console.log(menu.data)
+      }
+    },[menu.data])
+
     return (
       <View style={{backgroundColor: 'white' , height: '100%'}}>
         <StatusBar translucent backgroundColor="transparent" barStyle={'dark-content'} />
@@ -43,9 +46,9 @@ const SearchPage = ({navigation}) => {
         onChangeText={onChangeSearch} value={search} placeholder='Search Pasta, Bread, etc' placeholderTextColor={'#C4C4C4'}/>
         {/*Recipe Data*/}
         <ScrollView>
-            {!recipe ? <Text>Loading</Text> : recipe?.map((item,index) => {
+            {menu.isLoading ? <ActivityIndicator size="large" color="#EFC81A"/> : menu.data?.map((item,index) => {
                 return(
-                    <TouchableOpacity onPress={() => navigation.push('DetailRecipe')}>
+                    <TouchableOpacity key={index+1} onPress={() => navigation.push('DetailRecipe',{id:item.id})}>
                         <View style={{marginLeft: 20}}>
                             <View style={{backgroundColor: 'white',alignItems: 'center', flexDirection: 'row',marginHorizontal: 20, borderRadius: 15, padding: 10}}>
                                 <Image style={{marginTop: 5, width: 70, height: 70, borderRadius: 15}} source={{uri: item.photo}} />

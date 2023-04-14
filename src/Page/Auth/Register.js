@@ -9,15 +9,42 @@ import {
   View,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 
 import { TextInput } from 'react-native-paper';
 
+import {useSelector, useDispatch } from 'react-redux';
+import {register} from "../../Storage/Action/auth"
+
 const RegisterPage = ({navigation}) => {
+  const dispatch = useDispatch()
+  const auth = useSelector((state)=>state.register)
+
   const [email, onChangeEmail] = React.useState('');
   const [name, onChangeName] = React.useState('');
   const [password, onChangePassword] = React.useState('');
+
+  const RegisterForm = () => {
+    let data = {
+      name: name,
+      email: email,
+      password: password
+    }
+    dispatch(register(data))
+    if (auth.data) {
+      ToastAndroid.show(`${auth.data.message}`, ToastAndroid.LONG)
+      auth.data = null
+      navigation.navigate('Login')
+    }
+  }
+
+  if (auth.isError) {
+    ToastAndroid.show(`${auth.errorMessage.message}`, ToastAndroid.SHORT)
+    auth.isError = false
+    auth.errorMessage = null
+  }
 
   return (
     <View style={{backgroundColor: 'white', height: '100%'}}>
@@ -31,7 +58,7 @@ const RegisterPage = ({navigation}) => {
         <TouchableOpacity onPress={() => navigation.push('ForgotPW')}>
           <Text style={{marginBottom: 20,textAlign: 'right', color: '#C4C4C4'}}>Forgot Password?</Text>
         </TouchableOpacity>
-        <Button onPress={() => navigation.navigate('Login')} color={'#EFC81A'} title='Register' />
+        <Button onPress={RegisterForm} color={'#EFC81A'} title='Register' />
       </SafeAreaView>
       <Text style={{marginTop: 20,textAlign: 'center', color: '#C4C4C4'}}>Have an account? <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={{color: '#EFC81A'}}>Sign In</Text></TouchableOpacity></Text>
     </View>

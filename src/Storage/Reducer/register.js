@@ -6,44 +6,35 @@ const initialState = {
     errorMessage:null
 }
 
-const auth = (state = initialState, {type,payload}) => {
-    switch(type){
-        case "LOGIN_REQUEST":
+const register = (state = initialState, action) => {
+    switch(action.type){
+        case "REGISTER_REQUEST":
             return {
                 ...state,
                 isLoading:true,
                 isError:false,
                 isSuccess:false,
-                data:null,
-                errorMessage:null
+                data:null
             }
-        case "LOGIN_SUCCESS":
+        case "REGISTER_SUCCESS":
             return {
                 ...state,
-                data:payload,
+                data:action.payload,
                 isLoading:false,
                 isError:false,
                 isSuccess:true
             }
-        case "LOGIN_ERROR":
+        case "REGISTER_ERROR":
             return {
             ...state,
-            errorMessage:payload,
+            errorMessage:action.payload,
             isLoading:false,
             isError:true,
             isSuccess:false
-        }
-        case "DELETE_STORE_TOKEN":
-            return {
-            ...state,
-            data:null,
-            isLoading:false,
-            isError:false,
-            isSuccess:true
         }
         default:
             return state
     }
 }
 
-export default auth;
+export default register;

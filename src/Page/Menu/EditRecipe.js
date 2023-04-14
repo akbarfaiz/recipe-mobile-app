@@ -11,8 +11,7 @@ import {
   Button,
   TouchableOpacity,
   PermissionsAndroid,
-  ActivityIndicator,
-  ToastAndroid
+  ActivityIndicator
 } from 'react-native';
 
 import axios from "axios"
@@ -27,12 +26,14 @@ import * as ImagePicker from 'react-native-image-picker'
 import Dialog, { DialogContent, DialogTitle, DialogFooter, DialogButton } from 'react-native-popup-dialog';
 
 import {useSelector, useDispatch } from 'react-redux';
-import {addRecipe} from "../../Storage/Action/menu"
+import {editRecipe, getDetailRecipe} from "../../Storage/Action/menu"
 
-const UploadPage = ({navigation}) => {
+const EditRecipePage = ({route,navigation}) => {
   const dispatch = useDispatch()
   const auth = useSelector((state)=>state.auth)
-  const menu = useSelector((state)=>state.addRecipe)
+  const edit = useSelector((state)=>state.editRecipe)
+  const menu = useSelector((state)=>state.detailRecipe)
+  const { id } = route.params;
 
   const [title, onChangeTitle] = React.useState('');
   const [ingredient, onChangeIngredient] = React.useState('');
@@ -104,20 +105,16 @@ const UploadPage = ({navigation}) => {
     })
   }
 
-  const postForm = () => {
-    if (title == '' || ingredient == '') {
-      ToastAndroid.show(`Please fill all data`, ToastAndroid.SHORT)
-    } else {
-      let formData = new FormData()
-      formData.append("name",title)
-      formData.append("ingredient",ingredient)
-      formData.append("category_id",category)
-      if (photo[0]?.uri) {
-        formData.append("photo",{uri:photo[0].uri,name:photo[0].fileName,type:photo[0].type})
-      }
-      dispatch(addRecipe(auth.data.data.token,formData))
-      menu.isSuccess && navigation.navigate('BottomNav',{screen: 'MyRecipe'})
+  const updateForm = () => {
+    let formData = new FormData()
+    formData.append("name",title)
+    formData.append("ingredient",ingredient)
+    formData.append("category_id",category)
+    if (photo[0]?.uri) {
+      formData.append("photo",{uri:photo[0].uri,name:photo[0].fileName,type:photo[0].type})
     }
+    dispatch(editRecipe(auth.data.data.token,formData,JSON.stringify(id)))
+    edit.isSuccess && navigation.navigate('BottomNav',{screen: 'MyRecipe'})
   }
 
   useEffect(() => {
@@ -126,14 +123,9 @@ const UploadPage = ({navigation}) => {
       console.log(result.data.data)
       setListCategory(result.data.data)
     }
-    const reset = navigation.addListener('focus', () => {
-      onChangeTitle('')
-      onChangeCategory(1)
-      onChangeIngredient('')
-      setPhoto({})
-      dataCategory()
-    })
-    return reset
+    dispatch(getDetailRecipe(JSON.stringify(id)))
+    setPhoto({})
+    dataCategory()
   },[])
 
   useEffect(() => {
@@ -142,10 +134,18 @@ const UploadPage = ({navigation}) => {
     }
   },[listCategory])
 
+  useEffect(() => {
+    if (menu.data) {
+        onChangeTitle(menu.data[0].name)
+        onChangeCategory(menu.data[0].category_id)
+        onChangeIngredient(menu.data[0].ingredient)
+    }
+  },[menu.data])
+
   return (
     <View style={{backgroundColor: '#f7f7f7' , height: '100%'}}>
       <StatusBar translucent backgroundColor="transparent" barStyle={'dark-content'} />
-      <Text style={{color:'#EFC81A', fontSize: 30, textAlign: 'center', fontWeight: '500', marginTop: 70}}>Add Your Recipe</Text>
+      <Text style={{color:'#EFC81A', fontSize: 30, textAlign: 'center', fontWeight: '500', marginTop: 70}}>Edit Your Recipe</Text>
       <SafeAreaView style={{margin: 25}}>
         <TextInput mode="outlined" left={<TextInput.Icon icon={'book-open-blank-variant'} iconColor='#C4C4C4' />} style={styles.input} activeOutlineColor={'#EFC81A'} onChangeText={onChangeTitle} value={title} placeholder='Title' placeholderTextColor={'#C4C4C4'}/>
 
@@ -168,7 +168,7 @@ const UploadPage = ({navigation}) => {
           })}
         </Picker>
 
-        <Button onPress={() => postForm()}color={'#EFC81A'} title='POST' />
+        <Button onPress={() => updateForm()}color={'#EFC81A'} title='UPDATE' />
       </SafeAreaView>
       {/*Pop Up Pick Photo*/}
       <Dialog
@@ -217,4 +217,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default UploadPage;
+export default EditRecipePage;

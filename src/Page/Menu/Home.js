@@ -22,7 +22,7 @@ const HomePage = ({navigation}) => {
         <StatusBar translucent backgroundColor="transparent" barStyle={'dark-content'} />
         {/*Search Bar*/}
         <TouchableOpacity onPress={() => navigation.push('Search')}>
-            <TextInput mode="outlined" left={<TextInput.Icon icon={'magnify'} iconColor='#C4C4C4' />} style={styles.input} activeOutlineColor={'#C4C4C4'} onChangeText={onChangeSearch} value={search} placeholder='Search Pasta, Bread, etc' placeholderTextColor={'#C4C4C4'}/>
+            <TextInput editable={false} selectTextOnFocus={false} mode="outlined" left={<TextInput.Icon icon={'magnify'} iconColor='#C4C4C4' />} style={styles.input} activeOutlineColor={'#C4C4C4'} onChangeText={onChangeSearch} value={search} placeholder='Search Pasta, Bread, etc' placeholderTextColor={'#C4C4C4'}/>
         </TouchableOpacity>
         
         <View style={{marginLeft: 20}}>
@@ -37,7 +37,7 @@ const HomePage = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             <ScrollView horizontal={true} style={{flexDirection: 'row', marginVertical: 15}}>
-                <TouchableOpacity onPress={() => navigation.push('DetailRecipe')}>
+                <TouchableOpacity>
                     <View style={{marginRight: 20, marginBottom: 15}}>
                         <Image source={require('../../Asset/Home/egg_salad.png')} />
                         <Text style={{fontWeight: 'bold', fontSize: 20, color: 'white', marginTop: -65, marginLeft: 20,width: '50%'}}>Sandwich with Egg</Text>

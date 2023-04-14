@@ -21,6 +21,8 @@ import ProfilePage from './src/Page/Menu/Profile'
 import SearchPage from './src/Page/Menu/Search'
 import PopularPage from './src/Page/Menu/Popular'
 import DetailRecipePage from './src/Page/Menu/DetailRecipe'
+import EditRecipePage from './src/Page/Menu/EditRecipe'
+import EditProfilePage from './src/Page/Menu/EditProfile'
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -53,7 +55,8 @@ function BottomNav() {
             <Icon name="bookmark-outline" color={color} size={size} />
           ),
         }} />
-        <Tab.Screen name="Profile" component={ProfilePage} options={{
+        <Tab.Screen name="Profile" component={ProfilePage}  options={{
+          unmountOnBlur: true,
           tabBarIcon: ({ color, size }) => (
             <Icon name="person-outline" color={color} size={size} />
           ),
@@ -83,6 +86,8 @@ const App = () => {
               <Stack.Screen name='Search' component={SearchPage}/>
               <Stack.Screen name='Popular' component={PopularPage}/>
               <Stack.Screen name='DetailRecipe' component={DetailRecipePage}/>
+              <Stack.Screen name='EditRecipe' component={EditRecipePage}/>
+              <Stack.Screen name='EditProfile' component={EditProfilePage}/>
             </>
         }
       </Stack.Navigator>

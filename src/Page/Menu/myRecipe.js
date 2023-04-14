@@ -10,59 +10,57 @@ import {
   Image,
   Button,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
+
+import Dialog, { DialogContent, DialogTitle, DialogFooter, DialogButton } from 'react-native-popup-dialog';
 
 import axios from "axios"
 import {API_URL} from "@env"
 
 import {useSelector, useDispatch } from 'react-redux';
-import {getMyRecipe} from "../../Storage/Action/menu"
+import {getMyRecipe, deleteRecipe} from "../../Storage/Action/menu"
 
 const MyRecipePage = ({navigation}) => {
   const dispatch = useDispatch()
   const auth = useSelector((state)=>state.auth)
   const menu = useSelector((state)=>state.myRecipe)
-  const [recipe, setRecipe] = useState();
-  console.log(recipe)
+  const dlt = useSelector((state)=>state.deleteRecipe)
 
-  // useEffect(() => {
-  //   dispatch(getMyRecipe(auth.data.data.token))
-  // },[])
-
-  // useEffect(() => {
-  //   if (menu.data) {
-  //     console.log('Recipe ku -> ' + menu)
-  //     console.log(menu.data)
-  //   }
-  // },[menu.data])
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalId, setModalId] = useState();
+  
+  const deleteMenu = (id) => {
+    dispatch(deleteRecipe(auth.data.data.token,id))
+  }
 
   useEffect(() => {
-    const getData = async () => {
-      let headers = {
-        headers:{
-          Authorization: `Bearer ${auth.data.data.token}`
-      }}
-      return await axios.get(API_URL+"/recipe/myRecipe",headers).then(
-        res => {
-        console.log(res)
-        setRecipe(res.data.data)
-        }
-      ).catch(err => {
-        console.log(err)
-      })
+    const reset = navigation.addListener('focus', () => {
+      dispatch(getMyRecipe(auth.data.data.token))
+    })
+    return reset
+  },[navigation])
+
+  useEffect(() => {
+    if (menu.data) {
+      console.log(menu.data)
     }
-    getData()
-  },[])
+  },[menu.data])
+
+  useEffect(() => {
+    dispatch(getMyRecipe(auth.data.data.token))
+  },[dlt])
 
   return (
     <View style={{backgroundColor: '#f7f7f7' , height: '100%'}}>
       <StatusBar translucent backgroundColor="transparent" barStyle={'dark-content'} />
       <Text style={{color:'#EFC81A', fontSize: 30, textAlign: 'center', fontWeight: '500', marginTop: 70}}>My Recipe</Text>
       {/*Data Recipe Column*/}
-      {!recipe ? <Text>Loading</Text> : recipe?.map((item,index) => {
+      <ScrollView>
+      {menu.isLoading ? <ActivityIndicator size="large" color="#EFC81A"/> : menu.data?.map((item,index) => {
         return(
-          <View style={{backgroundColor: 'white',alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 ,marginHorizontal: 20, borderRadius: 15, padding: 10}}>
+          <View key={index+1} style={{backgroundColor: 'white',alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 ,marginHorizontal: 20, borderRadius: 15, padding: 10}}>
             <Image style={{marginTop: 5, width: 70, height: 70, borderRadius: 15}} source={{uri: item.photo}} />
             <View style={{justifyContent: 'space-around', padding: 20,marginTop: -10, marginLeft: -30}}>
                 <Text style={{color: 'black', fontWeight: '500', fontSize: 17}}>{item.name}</Text>
@@ -70,13 +68,35 @@ const MyRecipePage = ({navigation}) => {
             </View>
             <View style={{padding: 5}}>
                 <View style={{marginBottom: 15}}>
-                    <Button color={'#30C0F3'} style={{color: 'white'}} title='Edit' />
+                    <Button onPress={() => navigation.push('EditRecipe',{id:item.id})} color={'#30C0F3'} style={{color: 'white'}} title='Edit' />
                 </View>
-                <Button color={'#F57E71'} style={{color: 'white'}} title='Delete' />
+                <Button onPress={() => {setModalVisible(true); setModalId(item.id)}} color={'#F57E71'} style={{color: 'white'}} title='Delete' />
             </View> 
           </View>
         )
       })}
+      </ScrollView>
+      {/*Pop Up Delete*/}
+      <Dialog
+        visible={modalVisible}
+        dialogTitle={<DialogTitle title="Are you sure to delete this recipe ?" />}
+        onTouchOutside={() => {
+          setModalVisible(false)
+        }}
+        footer={
+          <DialogFooter>
+            <DialogButton
+              text="YES"
+              onPress={() => {deleteMenu(modalId); setModalVisible(false)}}
+            />
+            <DialogButton
+              text="CANCEL"
+              onPress={() => {setModalVisible(false)}}
+            />
+          </DialogFooter>
+        }
+      >
+      </Dialog>
     </View>
   )
 };
