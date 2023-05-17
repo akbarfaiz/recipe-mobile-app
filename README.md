@@ -2,6 +2,12 @@
 
 Recipe Mobile App is a app that provides a place for users to search or share recipes. This app was built using React Native. For Backend, I using my API at the following URL : https://github.com/akbarfaiz/food_recipe
 
+<h3>Built with</h3>
+This app was built with some technologies below : <br>
+- <a href='https://developer.android.com'>Android Studio</a><br>
+- <a href='https://www.javascript.com/'>Javascript</a><br>
+- <a href='https://reactnative.dev'>React Native</a><br>
+- <a href='https://axios-http.com/'>Axios</a><br>
 
 ## Requirements
 
