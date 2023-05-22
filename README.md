@@ -1,20 +1,41 @@
-# Recipe Mobile App
+<div align="center">
+    <h3 align="center">Recipe Mobile App</h3>
+    <img src='https://github.com/akbarfaiz/recipe-react-web/assets/87055460/260204ac-5591-4c4f-a08b-30e23f4a5a22' width="150" height="150" />
+</div>
 
+## Table of Contents
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#documentation">Documentation</a></li>
+    <li><a href="#related-project">Related Project</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
+
+## About The Project
 Recipe Mobile App is a app that provides a place for users to search or share recipes. This app was built using React Native. For Backend, I using my API at the following URL : https://github.com/akbarfaiz/food_recipe
 
-<h3>Built with</h3>
+### Built With
 This app was built with some technologies below : <br>
 - <a href='https://developer.android.com'>Android Studio</a><br>
 - <a href='https://www.javascript.com/'>Javascript</a><br>
 - <a href='https://reactnative.dev'>React Native</a><br>
 - <a href='https://axios-http.com/'>Axios</a><br>
 
-## Requirements
-
-    1. Node Js
-    2. React Native
-    3. Android Studio
-    4. Android Emulator/Android Device
+## Getting Started
+Before going to the installation stage there are some software that must be installed first.
+* <a href='https://nodejs.org/en/download'>Node Js</a><br>
+* <a href='https://developer.android.com/studio'>Android Studio</a><br>
 
 
 ## Installation
@@ -40,10 +61,6 @@ This app was built with some technologies below : <br>
 ```bash
   npm run android
 ```
-## Mobile App APK
-
-https://github.com/akbarfaiz/recipe-mobile-app/tree/main/build-apk
-
 
 ## Documentation
 
@@ -58,3 +75,10 @@ https://github.com/akbarfaiz/recipe-mobile-app/tree/main/build-apk
 | My Recipe Screen                    | Profile Screen                     |
 | ----------------------------------- | ----------------------------------- |
 | ![image](https://github.com/akbarfaiz/recipe-mobile-app/assets/87055460/c763b701-d528-4b5d-9c3f-fc9f5af1fc76) | ![image](https://github.com/akbarfaiz/recipe-mobile-app/assets/87055460/bc315fb1-cc8e-4640-beee-3e7a6c5f148c) |
+
+## Related Project
+:rocket: [Demo Project APK](https://github.com/akbarfaiz/recipe-mobile-app/tree/main/build-apk)<br>
+:rocket: [Backend Repo](https://github.com/akbarfaiz/food_recipe)
+
+## License
+Distributed under the [MIT](/LICENSE) License.
